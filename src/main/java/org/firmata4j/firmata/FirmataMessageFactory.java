@@ -24,7 +24,7 @@
 
 package org.firmata4j.firmata;
 
-import org.firmata4j.Pin;
+import org.firmata4j.FPin;
 
 import static org.firmata4j.firmata.parser.FirmataToken.*;
 
@@ -204,8 +204,8 @@ public class FirmataMessageFactory {
      * @param mode mode
      * @return message that assigns particular mode to specified pin
      */
-    public static byte[] setMode(byte pinId, Pin.Mode mode) {
-        if (mode == Pin.Mode.UNSUPPORTED) {
+    public static byte[] setMode(byte pinId, FPin.Mode mode) {
+        if (mode == FPin.Mode.UNSUPPORTED) {
             throw new IllegalArgumentException("Cannot set unsupported mode to pin " + pinId);
         }
         return new byte[]{SET_PIN_MODE, pinId, (byte) mode.ordinal()};
@@ -274,7 +274,7 @@ public class FirmataMessageFactory {
     /**
      * Builds servo configuration message.<br/>
      * The core idea is to just add a "config" message, then use
-     * {@link #setMode(byte, org.firmata4j.Pin.Mode)} to attach/detach Servo
+     * {@link #setMode(byte, org.firmata4j.FPin.Mode)} to attach/detach Servo
      * support to a pin. Then the normal {@link #setAnalogPinValue(byte, long)}
      * is used to send data.
      *

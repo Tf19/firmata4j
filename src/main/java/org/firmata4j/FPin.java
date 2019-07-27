@@ -34,7 +34,7 @@ import org.firmata4j.firmata.parser.FirmataToken;
  *
  * @author Oleg Kurbatov &lt;o.v.kurbatov@gmail.com&gt;
  */
-public interface Pin {
+public interface FPin {
 
     /**
      * Mode represents particular duty of a pin.
@@ -195,7 +195,7 @@ public interface Pin {
      *
      * @param listener the listener
      */
-    void addEventListener(PinEventListener listener);
+    void addEventListener(FPinEventListener listener);
 
     /**
      * Removes the specified listener so that it no longer receives events from
@@ -203,7 +203,7 @@ public interface Pin {
      *
      * @param listener the listener
      */
-    void removeEventListener(PinEventListener listener);
+    void removeEventListener(FPinEventListener listener);
     
     
     /**

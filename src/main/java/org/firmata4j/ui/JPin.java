@@ -42,22 +42,22 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
 import org.firmata4j.IOEvent;
-import org.firmata4j.Pin;
-import org.firmata4j.PinEventListener;
+import org.firmata4j.FPin;
+import org.firmata4j.FPinEventListener;
 
 /**
- * Displays representation of a {@link Pin}.<br/>
+ * Displays representation of a {@link FPin}.<br/>
  * Currently it supports displaying of pins in
- * {@link org.firmata4j.Pin.Mode#INPUT},
- * {@link org.firmata4j.Pin.Mode#OUTPUT} and
- * {@link org.firmata4j.Pin.Mode#ANALOG} modes as well as disabled pins, i.e., 
+ * {@link org.firmata4j.FPin.Mode#INPUT},
+ * {@link org.firmata4j.FPin.Mode#OUTPUT} and
+ * {@link org.firmata4j.FPin.Mode#ANALOG} modes as well as disabled pins, i.e., 
  * pins without supported modes.
  *
  * @author Oleg Kurbatov &lt;o.v.kurbatov@gmail.com&gt;
  */
-public class JPin extends JLabel implements PinEventListener {
+public class JPin extends JLabel implements FPinEventListener {
 
-    private Pin model;
+    private FPin model;
     private JPopupMenu modesMenu;
     private Runnable refreshRoutine = new Runnable() {
         @Override
@@ -65,23 +65,23 @@ public class JPin extends JLabel implements PinEventListener {
             refreshIcon();
         }
     };
-    private static final Map<Pin.Mode, Map<String, Icon>> ICONS = new HashMap<>();
+    private static final Map<FPin.Mode, Map<String, Icon>> ICONS = new HashMap<>();
     private static final Icon DISABLED_OFF;
     private static final Icon DISABLED_ON;
 
     static {
         ClassLoader classLoader = JPin.class.getClassLoader();
         Map<String, Icon> iconset = new HashMap<>();
-        ICONS.put(Pin.Mode.INPUT, iconset);
+        ICONS.put(FPin.Mode.INPUT, iconset);
         iconset.put("on", new ImageIcon(classLoader.getResource("img/green-on.png")));
         iconset.put("off", new ImageIcon(classLoader.getResource("img/green-off.png")));
 
-        ICONS.put(Pin.Mode.PULLUP, iconset);
+        ICONS.put(FPin.Mode.PULLUP, iconset);
         iconset.put("on", new ImageIcon(classLoader.getResource("img/green-on.png")));
         iconset.put("off", new ImageIcon(classLoader.getResource("img/green-off.png")));
 
         iconset = new HashMap<>();
-        ICONS.put(Pin.Mode.OUTPUT, iconset);
+        ICONS.put(FPin.Mode.OUTPUT, iconset);
         iconset.put("on", new ImageIcon(classLoader.getResource("img/blue-on.png")));
         iconset.put("off", new ImageIcon(classLoader.getResource("img/blue-off.png")));
 
@@ -89,7 +89,7 @@ public class JPin extends JLabel implements PinEventListener {
         DISABLED_OFF = new ImageIcon(classLoader.getResource("img/gray-off.png"));
     }
 
-    public JPin(Pin pin) {
+    public JPin(FPin pin) {
         setHorizontalAlignment(JLabel.CENTER);
         modesMenu = new JPopupMenu(String.valueOf(pin.getIndex()));
         setModel(pin);
@@ -97,7 +97,7 @@ public class JPin extends JLabel implements PinEventListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    if (model.getMode() == Pin.Mode.OUTPUT) {
+                    if (model.getMode() == FPin.Mode.OUTPUT) {
                         long newValue = (model.getValue() == 0 ? 1 : 0);
                         try {
                             model.setValue(newValue);
@@ -134,19 +134,19 @@ public class JPin extends JLabel implements PinEventListener {
         SwingUtilities.invokeLater(refreshRoutine);
     }
 
-    public final void setModel(final Pin model) {
+    public final void setModel(final FPin model) {
         if (this.model != null) {
             this.model.removeEventListener(this);
             modesMenu.removeAll();
         }
         this.model = model;
         ButtonGroup group = new ButtonGroup();
-        for (Pin.Mode mode : model.getSupportedModes()) {
+        for (FPin.Mode mode : model.getSupportedModes()) {
             Action action = new AbstractAction(mode.name()) {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        model.setMode((Pin.Mode) getValue("mode"));
+                        model.setMode((FPin.Mode) getValue("mode"));
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(JPin.this, ex.getLocalizedMessage(), "", JOptionPane.ERROR_MESSAGE);
                     }
@@ -163,7 +163,7 @@ public class JPin extends JLabel implements PinEventListener {
     }
 
     private void refreshIcon() {
-        Pin.Mode mode = model.getMode();
+        FPin.Mode mode = model.getMode();
         setToolTipText(String.valueOf(mode));
         if (mode == null) {
             setIcon(DISABLED_OFF);
@@ -172,7 +172,7 @@ public class JPin extends JLabel implements PinEventListener {
             String key = (model.getValue() == 0 ? "off" : "on");
             setIcon(ICONS.get(model.getMode()).get(key));
             setText(null);
-        } else if (mode == Pin.Mode.ANALOG) {
+        } else if (mode == FPin.Mode.ANALOG) {
             setText(String.valueOf(model.getValue()));
             setIcon(null);
         } else {

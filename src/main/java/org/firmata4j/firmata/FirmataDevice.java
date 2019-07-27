@@ -204,8 +204,8 @@ public class FirmataDevice implements IODevice {
     }
 
     @Override
-    public Set<Pin> getPins() {
-        return new HashSet<Pin>(pins);
+    public Set<FPin> getPins() {
+        return new HashSet<FPin>(pins);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class FirmataDevice implements IODevice {
     }
 
     @Override
-    public Pin getPin(int index) {
+    public FPin getPin(int index) {
         return pins.get(index);
     }
 
@@ -359,7 +359,7 @@ public class FirmataDevice implements IODevice {
             byte pinId = (Byte) event.getBodyItem(PIN_ID);
             FirmataPin pin = new FirmataPin(FirmataDevice.this, pinId);
             for (byte i : (byte[]) event.getBodyItem(PIN_SUPPORTED_MODES)) {
-                pin.addSupportedMode(Pin.Mode.resolve(i));
+                pin.addSupportedMode(FPin.Mode.resolve(i));
             }
             pins.add(pin.getIndex(), pin);
             if (pin.getSupportedModes().isEmpty()) {
@@ -399,7 +399,7 @@ public class FirmataDevice implements IODevice {
             byte pinId = (Byte) event.getBodyItem(PIN_ID);
             FirmataPin pin = pins.get(pinId);
             if (pin.getMode() == null) {
-                pin.initMode(Pin.Mode.resolve((Byte) event.getBodyItem(PIN_MODE)));
+                pin.initMode(FPin.Mode.resolve((Byte) event.getBodyItem(PIN_MODE)));
                 pin.initValue((Long) event.getBodyItem(PIN_VALUE));
             } else {
                 pin.updateValue((Long) event.getBodyItem(PIN_VALUE));
@@ -448,7 +448,7 @@ public class FirmataDevice implements IODevice {
                 int pinId = analogMapping.get(analogId);
                 if (pinId < pins.size()) {
                     FirmataPin pin = pins.get(pinId);
-                    if (Pin.Mode.ANALOG.equals(pin.getMode())) {
+                    if (FPin.Mode.ANALOG.equals(pin.getMode())) {
                         pin.updateValue((Integer) event.getBodyItem(PIN_VALUE));
                     }
                 }
@@ -465,8 +465,8 @@ public class FirmataDevice implements IODevice {
             int pinId = (Integer) event.getBodyItem(PIN_ID);
             if (pinId < pins.size()) {
                 FirmataPin pin = pins.get(pinId);
-                if (Pin.Mode.INPUT.equals(pin.getMode()) ||
-                        Pin.Mode.PULLUP.equals(pin.getMode())) {
+                if (FPin.Mode.INPUT.equals(pin.getMode()) ||
+                        FPin.Mode.PULLUP.equals(pin.getMode())) {
                     pin.updateValue((Integer) event.getBodyItem(PIN_VALUE));
                 }
             }

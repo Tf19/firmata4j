@@ -25,12 +25,12 @@
 package org.firmata4j;
 
 /**
- * The listener interface for receiving events from {@link Pin}. When pin's mode
+ * The listener interface for receiving events from {@link FPin}. When pin's mode
  * or value changes, the relevant method in the listener object is invoked.
  *
  * @author Oleg Kurbatov &lt;o.v.kurbatov@gmail.com&gt;
  */
-public interface PinEventListener {
+public interface FPinEventListener {
     
     /**
      * Invoked when pin's mode changes.

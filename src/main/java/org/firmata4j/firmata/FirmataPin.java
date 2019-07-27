@@ -31,20 +31,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.firmata4j.IOEvent;
-import org.firmata4j.Pin;
-import org.firmata4j.PinEventListener;
+import org.firmata4j.FPin;
+import org.firmata4j.FPinEventListener;
 
 /**
  * This class contains implementation of Firmata pin.
  *
  * @author Oleg Kurbatov &lt;o.v.kurbatov@gmail.com&gt;
  */
-public class FirmataPin implements Pin {
+public class FirmataPin implements FPin {
 
     private final FirmataDevice device;
     private final byte pinId;
     private final Set<Mode> supportedModes = Collections.synchronizedSet(EnumSet.noneOf(Mode.class));
-    private final Set<PinEventListener> listeners = Collections.synchronizedSet(new HashSet<PinEventListener>());
+    private final Set<FPinEventListener> listeners = Collections.synchronizedSet(new HashSet<FPinEventListener>());
     private volatile Mode currentMode;
     private volatile long currentValue;
 
@@ -97,7 +97,7 @@ public class FirmataPin implements Pin {
                 currentMode = mode;
                 IOEvent evt = new IOEvent(this);
                 getDevice().pinChanged(evt);
-                for (PinEventListener listener : listeners) {
+                for (FPinEventListener listener : listeners) {
                     listener.onModeChange(evt);
                 }
                 getDevice().sendMessage(FirmataMessageFactory.pinStateRequest(pinId));
@@ -137,7 +137,7 @@ public class FirmataPin implements Pin {
             byte pinInPort = (byte) (pinId % 8);
             byte portValue = 0;
             for (int i = 0; i < 8; i++) {
-                Pin p = device.getPin(portId * 8 + i);
+                FPin p = device.getPin(portId * 8 + i);
                 if (p.getMode() == Mode.OUTPUT && p.getValue() > 0) {
                     portValue |= 1 << i;
                 }
@@ -164,12 +164,12 @@ public class FirmataPin implements Pin {
     }
 
     @Override
-    public void addEventListener(PinEventListener listener) {
+    public void addEventListener(FPinEventListener listener) {
         listeners.add(listener);
     }
 
     @Override
-    public void removeEventListener(PinEventListener listener) {
+    public void removeEventListener(FPinEventListener listener) {
         listeners.remove(listener);
     }
     
@@ -191,7 +191,7 @@ public class FirmataPin implements Pin {
 
     /**
      * Sets initial mode of a pin. This method bypasses standard
-     * {@link #setMode(org.firmata4j.Pin.Mode)} to avoid sending a
+     * {@link #setMode(org.firmata4j.FPin.Mode)} to avoid sending a
      * message to hardware.
      *
      * @param mode initial mode
@@ -220,7 +220,7 @@ public class FirmataPin implements Pin {
             currentValue = value;
             IOEvent evt = new IOEvent(this);
             getDevice().pinChanged(evt); // the device listeners receive the event first
-            for (PinEventListener listener : listeners) { // then pin listeners receive the event
+            for (FPinEventListener listener : listeners) { // then pin listeners receive the event
                 listener.onValueChange(evt);
             }
         }

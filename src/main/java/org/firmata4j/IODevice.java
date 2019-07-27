@@ -85,9 +85,9 @@ public interface IODevice {
      * Returns a set of pins of the device.
      *
      * @return set of device's pins
-     * @see Pin
+     * @see FPin
      */
-    Set<Pin> getPins();
+    Set<FPin> getPins();
 
     /**
      * Returns count of pins of the device.
@@ -103,7 +103,7 @@ public interface IODevice {
      * @param index index of the pin
      * @return the pin
      */
-    Pin getPin(int index);
+    FPin getPin(int index);
     
     /**
      * Returns I2C device by its address.

@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.firmata4j.IODevice;
 import org.firmata4j.IODeviceEventListener;
 import org.firmata4j.IOEvent;
-import org.firmata4j.Pin;
+import org.firmata4j.FPin;
 import org.firmata4j.firmata.FirmataDevice;
 
 public class MyTest {
@@ -19,8 +19,8 @@ public class MyTest {
 		device.ensureInitializationIsDone(); // wait for initialization is done
 		// sending commands to the board
 		
-		Pin pin = device.getPin(13);
-		pin.setMode(Pin.Mode.OUTPUT); // our listeners will get event about this change
+		FPin pin = device.getPin(13);
+		pin.setMode(FPin.Mode.OUTPUT); // our listeners will get event about this change
 		
 		device.addEventListener(new IODeviceEventListener() {
 		    @Override
@@ -39,7 +39,7 @@ public class MyTest {
 		    @Override
 		    public void onPinChange(IOEvent event) {
 		        // here we react to changes of pins' state
-		        Pin pin = event.getPin();
+		        FPin pin = event.getPin();
 		        System.out.println(
 		                String.format(
 		                    "Pin %d got a value of %d",

@@ -32,7 +32,7 @@ package org.firmata4j;
 public class IOEvent {
 
     private final IODevice device;
-    private final Pin pin;
+    private final FPin pin;
     private final long value;
     private final long timestamp;
 
@@ -61,23 +61,23 @@ public class IOEvent {
     }
 
     /**
-     * Constructs the event is relevant to a particular {@link Pin}.
+     * Constructs the event is relevant to a particular {@link FPin}.
      *
      * @param pin the pin that originated the event
      */
-    public IOEvent(Pin pin) {
+    public IOEvent(FPin pin) {
         this(pin, System.currentTimeMillis());
     }
     
     /**
-     * Constructs the event is relevant to a particular {@link Pin}.
+     * Constructs the event is relevant to a particular {@link FPin}.
      *
      * This constructor allows setting the timestamp of event.
      * 
      * @param pin the pin that originated the event
      * @param timestamp the timestamp of event
      */
-    public IOEvent(Pin pin, long timestamp) {
+    public IOEvent(FPin pin, long timestamp) {
         this.device = pin.getDevice();
         this.pin = pin;
         this.value = pin.getValue();
@@ -100,7 +100,7 @@ public class IOEvent {
      * @return the pin that originated the event or null if a pin does not
      * involved in the event
      */
-    public Pin getPin() {
+    public FPin getPin() {
         return pin;
     }
 
